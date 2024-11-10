@@ -8,7 +8,7 @@ BIN_DIR="/usr/local/bin"                           # Директория для
 
 # Приветственное сообщение с ASCII-логотипом
 logo="
-████████╗██╗   ██╗████████╗ ██████╗ ██╗  ██╗███████╗██╗     ██████╗ ███████╗██████╗ 
+████████╗██╗   ██╗████████╗ ██████╗ ██╗  ██╗███████╗██╗     ██████╗ ███████╗██████╗
 ╚══██╔══╝██║   ██║╚══██╔══╝██╔═══██╗██║  ██║██╔════╝██║     ██╔══██╗██╔════╝██╔══██╗
    ██║   ██║   ██║   ██║   ██║   ██║███████║█████╗  ██║     ██████╔╝█████╗  ██████╔╝
    ██║   ██║   ██║   ██║   ██║   ██║██╔══██║██╔══╝  ██║     ██╔═══╝ ██╔══╝  ██╔══██╗
@@ -43,6 +43,30 @@ install_dialog() {
   fi
 }
 
+# Функция для установки git, если он не установлен
+install_git() {
+  if ! command -v git &> /dev/null; then
+    echo "git не найден, пытаемся установить..."
+    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+      # Для Linux
+      if command -v apt-get &> /dev/null; then
+        sudo apt-get update
+        sudo apt-get install -y git
+      elif command -v yum &> /dev/null; then
+        sudo yum install -y git
+      else
+        echo "Не удалось определить менеджер пакетов для установки git."
+        exit 1
+      fi
+    else
+      echo "Неизвестная операционная система."
+      exit 1
+    fi
+  else
+    echo "git уже установлен."
+  fi
+}
+
 # Функция для клонирования репозитория
 clone_repository() {
   echo "Клонируем репозиторий из GitHub..."
@@ -63,7 +87,7 @@ clone_repository() {
 # Создаем символическую ссылку
 create_symlink() {
   SYMLINK_PATH="$BIN_DIR/tutohelper"
-  
+
   # Проверка существования главного скрипта
   if [ ! -f "$DIALOG_SCRIPT" ]; then
     echo "Ошибка: главный скрипт $DIALOG_SCRIPT не найден."
@@ -92,23 +116,19 @@ create_symlink() {
 # Основная логика установки
 echo "Запуск установки проекта..."
 
-# Проверка наличия главного скрипта в текущей директории
-if [ -f "./tutohelper.sh" ]; then
-  echo "Главный скрипт tutoHelper.sh найден в текущей директории."
-  INSTALL_DIR="$(pwd)"            # Обновляем INSTALL_DIR на текущую директорию
-  DIALOG_SCRIPT="$INSTALL_DIR/tutohelper.sh"  # Обновляем путь к главному скрипту
-else
-  # Устанавливаем утилиту dialog, если проект не был клонирован
-  install_dialog
-  # Клонируем проект
-  clone_repository
-fi
+# Устанавливаем утилиту dialog, если она не установлена
+install_dialog
+
+# Устанавливаем git, если он не установлен
+install_git
+
+# Клонируем проект
+clone_repository
 
 # Создаем символическую ссылку
 create_symlink
 
 # Добавляем проект в системный PATH (если требуется)
-# Определяем, какой файл конфигурации использовать в зависимости от оболочки
 SHELL_NAME=$(basename "$SHELL")
 if [ "$SHELL_NAME" == "bash" ]; then
     RC_FILE="$HOME/.bashrc"
@@ -122,7 +142,7 @@ fi
 # Проверяем, не добавлен ли уже путь в $PATH
 if ! grep -q "$INSTALL_DIR" "$RC_FILE"; then
     echo "Добавляю директорию проекта в PATH в $RC_FILE..."
-    echo "export PATH=\"\$PATH:$PROJECT_DIR\"" >> "$RC_FILE"
+    echo "export PATH=\"\$PATH:$INSTALL_DIR\"" >> "$RC_FILE"
 else
     echo "Директория проекта уже добавлена в PATH."
 fi
