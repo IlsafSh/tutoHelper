@@ -6,7 +6,6 @@
 find_best_student() {
   local fs_path=${1}
   local group=${2}
-  local subject=${3}
   local group_file="$fs_path/students/groups/$group"
   local tests_folder1="$fs_pathПивоварение/tests"
   local tests_folder2="$fs_pathУфология/tests"
