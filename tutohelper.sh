@@ -8,6 +8,7 @@ fi
 
 DIALOG=dialog
 tempfile=$(mktemp)  # Временный файл для вывода результатов
+INSTALL_DIR="$HOME/tutoHelper"	# Директория установленного проекта
 
 # Функция для выбора года группы в зависимости от ее номера
 select_group() {
@@ -159,7 +160,7 @@ while true; do
       subject_choice=$(select_subject)
       check_category "$subject_choice" "предмет" || continue
 
-      bash funcs/1_search_students.sh "$fs_path" "$group_choice" "$subject_choice" > "$tempfile"
+      bash "$INSTALL_DIR/"funcs/1_search_students.sh "$fs_path" "$group_choice" "$subject_choice" > "$tempfile"
       fold -s -w 160 "$tempfile" > "${tempfile}_formatted"
       $DIALOG --title "Студенты, не сдавшие тесты" --textbox "${tempfile}_formatted" 20 100
       rm "${tempfile}_formatted"
@@ -169,7 +170,7 @@ while true; do
       group_choice=$(select_group_category)
       check_category "$group_choice" "группу" || continue
 
-      bash funcs/2_find_best_student.sh "$fs_path" "$group_choice" > "$tempfile"
+      bash "$INSTALL_DIR/"funcs/2_find_best_student.sh "$fs_path" "$group_choice" > "$tempfile"
       fold -s -w 160 "$tempfile" > "${tempfile}_formatted"
       $DIALOG --title "Лучший студент" --textbox "${tempfile}_formatted" 20 100
       rm "${tempfile}_formatted"
@@ -182,7 +183,7 @@ while true; do
       student=$($DIALOG --inputbox "Введите фамилию студента:" 10 40 --stdout)
       check_category "$student" "студента" || continue
 
-      bash funcs/3_average_score.sh "$fs_path" "$subject_choice" "$student" > "$tempfile"
+      bash "$INSTALL_DIR/"funcs/3_average_score.sh "$fs_path" "$subject_choice" "$student" > "$tempfile"
       fold -s -w 160 "$tempfile" > "${tempfile}_formatted"
       $DIALOG --title "Средний балл" --textbox "${tempfile}_formatted" 20 100
       rm "${tempfile}_formatted"
@@ -192,7 +193,7 @@ while true; do
       student=$($DIALOG --inputbox "Введите фамилию студента:" 10 40 --stdout)
       check_category "$student" "студента" || continue
 
-      bash funcs/4_dossier.sh "$fs_path" "$student" > "$tempfile"
+      bash "$INSTALL_DIR/"funcs/4_dossier.sh "$fs_path" "$student" > "$tempfile"
       fold -s -w 160 "$tempfile" > "${tempfile}_formatted"
       $DIALOG --title "Досье студента" --textbox "${tempfile}_formatted" 20 100
       rm "${tempfile}_formatted"
@@ -205,7 +206,7 @@ while true; do
       subject_choice=$(select_subject)
       check_category "$subject_choice" "предмет" || continue
 
-      bash funcs/5_attendance_and_scores.sh "$fs_path" "$group_choice" "$subject_choice" > "$tempfile"
+      bash "$INSTALL_DIR/"funcs/5_attendance_and_scores.sh "$fs_path" "$group_choice" "$subject_choice" > "$tempfile"
       fold -s -w 160 "$tempfile" > "${tempfile}_formatted"
       $DIALOG --title "Посещаемость и оценки" --textbox "${tempfile}_formatted" 20 100
       rm "${tempfile}_formatted"
