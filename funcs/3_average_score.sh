@@ -23,6 +23,14 @@ calculate_average_score() {
     echo "Папка с тестами предмета $subject не найдена"
     return
   fi
+  
+  # Поиск всех тестовых файлов
+  tests_files=$(find $tests_folder/ -type f -name "TEST-*")
+  # Проверка, что тесты в папке существуют
+  if [[ -z "$tests_files" ]]; then
+    echo "В папке предмета $subject отсутствуют тесты"
+    return
+  fi
 
   # Подсчет среднего балла для указанного студента
   for test_file in "$tests_folder"/TEST-*; do

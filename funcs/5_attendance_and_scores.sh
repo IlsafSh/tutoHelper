@@ -10,7 +10,7 @@ check_attendance_and_scores() {
   local subject_folder="$fs_path/$subject"
   local tests_folder="$subject_folder/tests"
   local attendance_file="$subject_folder/$group-attendance"
-  local result="Студенты, пропустившие 1-ую лекцию и сдавшие 1-ый тест на 5:\n"
+  local result="Студенты, пропустившие 1-ую лекцию предмета $subject и сдавшие 1-ый тест на 5:\n"
 
   # Проверка, что папка предмета существует
   if [ ! -d "$subject_folder" ]; then
@@ -26,7 +26,15 @@ check_attendance_and_scores() {
 
   # Проверка, что файл посещаемости предмета для группы существует
   if [ ! -f "$attendance_file" ]; then
-    echo "Файл с посещаемостью группы $attendance_file не найден"
+    echo "Файл с посещаемостью группы $group-attendance не найден"
+    return
+  fi
+  
+  # Поиск первого тестового файла
+  test_file1=$(find $tests_folder/ -type f -name "TEST-1")
+  # Проверка, что тест в папке существуют
+  if [[ -z "$test_file1" ]]; then
+    echo "В папке предмета $subject отсутствует первый тест"
     return
   fi
 
@@ -50,7 +58,7 @@ check_attendance_and_scores() {
   done < "$attendance_file"
 
   # Если в result ничего не добавлено, значит условие не выполнено
-  if [[ "$result" == "Студенты, пропустившие 1-ую лекцию и сдавшие 1-ый тест на 5:\n" ]]; then
+  if [[ "$result" == "Студенты, пропустившие 1-ую лекцию предмета $subject и сдавшие 1-ый тест на 5:\n" ]]; then
     result+="Студенты не найдены."
   fi
 

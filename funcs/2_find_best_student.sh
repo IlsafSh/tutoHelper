@@ -6,11 +6,38 @@
 find_best_student() {
   local fs_path=${1}
   local group=${2}
+  local subject=${3}
+  local group_file="$fs_path/students/groups/$group"
+  local tests_folder1="$fs_pathПивоварение/tests"
+  local tests_folder2="$fs_pathУфология/tests"
+  local result="Лучший студент группы $group:\n"
   declare -A student_ans
+
+  # Проверка, что файл группы существует
+  if [ ! -f "$group_file" ]; then
+    echo "Файл со списком студентов группы $group не найден"
+    return
+  fi
+
+  # Проверка, что папка тестов Пивоварения существует
+  if [ ! -d "$tests_folder1" ]; then
+    echo "Папка с тестами предмета Пивоварение не найдена"
+    return
+  fi
+  
+  # Проверка, что папка тестов Уфологии существует
+  if [ ! -d "$tests_folder2" ]; then
+    echo "Папка с тестами предмета Уфология не найдена"
+    return
+  fi
 
   # Поиск всех тестовых файлов
   tests_files=$(find $fs_path/ -type f -path "*/tests/TEST-*")
-  #echo $tests_files
+  
+  if [[ "$tests_files" == "" ]]; then
+    echo "В папках предметов отсутствуют тесты"
+    return
+  fi
 
   # Подсчет общего количества правильных ответов для каждого студента
   for test_file in $tests_files; do
@@ -30,8 +57,15 @@ find_best_student() {
       max_ans=${student_ans[$student]}
     fi
   done
+  
+  # Если в result ничего не добавлено, значит студентов в группе нет
+  if [[ "$best_student" == "" ]]; then
+    result+="Студентов нет в группе"
+  else
+    result+="$best_student с общим баллом $max_ans"
+  fi
 
-  echo "Лучший студент: $best_student с общим баллом $max_ans"
+  echo -e "$result"
 }
 
 find_best_student "$@"

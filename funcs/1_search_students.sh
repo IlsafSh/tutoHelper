@@ -2,7 +2,6 @@
 
 #trap 'echo "# $BASH_COMMAND";read' DEBUG
 
-# 2.1.	Вывод списка студентов, не сдавших хотя бы один тест (с указанием номера теста)
 # Функция для поиска студентов, не сдавших тесты
 search_students_not_passed_tests() {
   local fs_path=${1}
@@ -11,7 +10,7 @@ search_students_not_passed_tests() {
   local group_file="$fs_path/students/groups/$group"
   local subject_folder="$fs_path/$subject"
   local tests_folder="$subject_folder/tests"
-  local result="Студенты, не сдавшие хотя бы один тест:\n"
+  local result="Студенты группы $group, не сдавшие хотя бы один тест по предмету $subject:\n"
 
   # Проверка, что файл группы существует
   if [ ! -f "$group_file" ]; then
@@ -28,6 +27,14 @@ search_students_not_passed_tests() {
   # Проверка, что папка тестов предмета существует
   if [ ! -d "$tests_folder" ]; then
     echo "Папка с тестами предмета $subject не найдена"
+    return
+  fi
+  
+  # Поиск всех тестовых файлов
+  tests_files=$(find $tests_folder/ -type f -name "TEST-*")
+  # Проверка, что тесты в папке существуют
+  if [[ -z "$tests_files" ]]; then
+    echo "В папке предмета $subject отсутствуют тесты"
     return
   fi
 
@@ -61,7 +68,7 @@ search_students_not_passed_tests() {
   done
 
   # Если в result ничего не добавлено, значит все студенты сдали тесты
-  if [[ "$result" == "Студенты, не сдавшие хотя бы один тест:\n" ]]; then
+  if [[ "$result" == "Студенты группы $group, не сдавшие хотя бы один тест по предмету $subject:\n" ]]; then
     result+="Все студенты сдали тесты."
   fi
 

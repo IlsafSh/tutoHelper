@@ -11,7 +11,7 @@ display_student_dossier() {
 
    # Проверка, что папка с записями существует
   if [ ! -d "$notes_folder" ]; then
-    echo "Папка с записями не найдена"
+    echo "Папка с записями о студентах не найдена"
     return
   fi
 
