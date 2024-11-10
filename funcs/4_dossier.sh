@@ -5,7 +5,7 @@
 # Функция для вывода досье студента
 display_student_dossier() {
   local fs_path=${1}
-  local student=${!#}
+  local student=${2}
   local notes_folder="$fs_path/students/general/notes"
   local result="Досье на студента $student:\n"
 

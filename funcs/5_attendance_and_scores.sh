@@ -5,8 +5,8 @@
 # Функция проверки посещаемости и оценок
 check_attendance_and_scores() {
   local fs_path=${1}
-  local group=${3}
-  local subject=${4}
+  local group=${2}
+  local subject=${3}
   local subject_folder="$fs_path/$subject"
   local tests_folder="$subject_folder/tests"
   local attendance_file="$subject_folder/$group-attendance"

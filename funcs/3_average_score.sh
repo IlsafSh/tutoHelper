@@ -5,8 +5,8 @@
 # Функция для вычисления среднего балла по предмету для студента с частичным совпадением имени
 calculate_average_score() {
   local fs_path=${1}
-  local subject=${3}
-  local partial_name=${4}
+  local subject=${2}
+  local partial_name=${3}
   local subject_folder="$fs_path/$subject"
   local tests_folder="$subject_folder/tests"
   local total_score=0

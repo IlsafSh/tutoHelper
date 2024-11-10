@@ -5,7 +5,7 @@
 # Функция для нахождения студента с максимальным числом правильных ответов
 find_best_student() {
   local fs_path=${1}
-  local group=${!#}
+  local group=${2}
   declare -A student_ans
 
   # Поиск всех тестовых файлов

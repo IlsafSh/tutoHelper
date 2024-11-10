@@ -6,8 +6,8 @@
 # Функция для поиска студентов, не сдавших тесты
 search_students_not_passed_tests() {
   local fs_path=${1}
-  local group=${3}
-  local subject=${4}
+  local group=${2}
+  local subject=${3}
   local group_file="$fs_path/students/groups/$group"
   local subject_folder="$fs_path/$subject"
   local tests_folder="$subject_folder/tests"
