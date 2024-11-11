@@ -16,7 +16,7 @@
 Для удобства установки `tutoHelper` можно использовать установочный скрипт `install.sh`, который автоматически скачает и установит все необходимые компоненты. Для установки просто выполните следующую команду в терминале с правами администратора:
 
 ```bash
-curl -O https://raw.githubusercontent.com/IlsafSh/tutoHelper/refs/heads/main/install.sh && chmod +x install.sh && ./install.sh
+curl -0 https://raw.githubusercontent.com/IlsafSh/tutoHelper/refs/heads/main/install.sh && chmod +x install.sh && ./install.sh
 ```
 
 ## Системные требования
